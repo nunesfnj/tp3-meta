@@ -382,19 +382,11 @@ class ArtificialBeeColony:
         }
     
     def _fitness_to_objective(self, fitness: float, minimize: bool) -> float:
-        """
-        Converte valor de fitness de volta para valor de função objetivo.
-        """
         if minimize:
-            # Inverte a transformação: fitness = 1/(1 + f(x))
-            if fitness > 0:
-                return (1.0 - fitness) / fitness
-            else:
-                return float('inf')
-        else:
-            # Inverte a transformação: fitness = f(x)/(1 + f(x))
-            if fitness < 1.0:
-                return fitness / (1.0 - fitness)
+            if fitness > 1.0:  # value < 0 (fitness = 1 + abs(value) > 1)
+                return 1.0 - fitness  # ← CORRETO
+            elif 0 < fitness <= 1.0:  # value >= 0
+                return (1.0 - fitness) / fitness  # ← CORRETO
             else:
                 return float('inf')
     
